@@ -3,7 +3,7 @@ function Button({ children, href, download, variant = "primary", className = "",
     const baseClasses = "px-4 py-2 font-medium transition-colors duration-200";
     
     const variantClasses = {
-      primary: "bg-yellow text-sm text-offBlack rounded-[5px] font-dm-sans hover:bg-yellow/90",
+      primary: "bg-yellow text-sm rounded-xl font-dm-sans hover:bg-yellow/90",
       outlined: "bg-transparent border border-creamBG rounded-2xl text-xl font-norwige text-creamBG py-4 hover:bg-yellow hover:text-offBlack hover:border-yellow",
       link: "bg-transparent text-creamBG underline font-norwige hover:text-yellow px-0 py-0"
     };

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import Matter from 'matter-js';
 import BuildingBlocks from './BuildingBlocks'; // Your existing styled component
 
@@ -32,7 +32,7 @@ function shuffleArray(array) {
     return shuffled;
 }
 
-export default function BuildingBlocksPhysicsWrapper() {
+const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
     const sceneRef = useRef(null);
     const engineRef = useRef(Matter.Engine.create());
     const [bodies, setBodies] = useState([]);
@@ -41,6 +41,24 @@ export default function BuildingBlocksPhysicsWrapper() {
     const [sizesReady, setSizesReady] = useState(false);
     const [shuffledBlocks] = useState(() => shuffleArray(blockData)); // Shuffle once on component mount
     const [isAnimating, setIsAnimating] = useState(false);
+
+    // Notify parent of state changes
+    useEffect(() => {
+        if (onStateChange) {
+            onStateChange({ isReady: sizesReady, isAnimating });
+        }
+    }, [sizesReady, isAnimating, onStateChange]);
+
+    // Expose control functions to parent component
+    useImperativeHandle(ref, () => ({
+        resetBlocks: () => resetBlocks(),
+        stackBlocks: () => stackBlocks(),
+        explodeBlocks: () => explodeBlocks(),
+        organizeByType: () => organizeByType(),
+        toggleGravity: () => toggleGravity(),
+        isReady: sizesReady,
+        isAnimating: isAnimating
+    }));
 
     // First effect: Measure sizes
     useEffect(() => {
@@ -88,7 +106,7 @@ export default function BuildingBlocksPhysicsWrapper() {
                 containerWidth / 2,
                 wallThickness / 2,
                 containerWidth,
-                wallThickness + 50,
+                wallThickness + 100,
                 { isStatic: true }
             ),
             // Left wall
@@ -134,8 +152,8 @@ export default function BuildingBlocksPhysicsWrapper() {
                 width,
                 height,
                 {
-                    restitution: 0.3,
-                    friction: 0.7,
+                    restitution: 0,
+                    friction: 1,
                     density: 0.001,
                 }
             );
@@ -234,7 +252,7 @@ export default function BuildingBlocksPhysicsWrapper() {
                     Matter.Body.setVelocity(body, { x: 0, y: 0 });
                     Matter.Body.setAngularVelocity(body, 0);
                     Matter.Body.setAngle(body, 0);
-                    stackY -= size.height + 5; // Add small gap between blocks
+                    stackY -= size.height + 6; // Add small gap between blocks
 
                     if (index === sortedBodies.length - 1) {
                         setTimeout(() => setIsAnimating(false), 500);
@@ -254,7 +272,7 @@ export default function BuildingBlocksPhysicsWrapper() {
         bodyRefs.current.forEach((body) => {
             if (body && body.isBlock) {
                 const angle = Math.random() * Math.PI * 2;
-                const force = Math.random() * 0.05 + 0.02;
+                const force = Math.random() * 0.1 + 0.05;
                 const forceVector = {
                     x: Math.cos(angle) * force,
                     y: Math.sin(angle) * force
@@ -287,11 +305,16 @@ export default function BuildingBlocksPhysicsWrapper() {
             }
         });
 
-        const variants = Object.keys(groupedBlocks);
+        // Sort variants by the number of blocks (ascending order)
+        // This way the largest stack will be last (rightmost)
+        const variants = Object.keys(groupedBlocks).sort((a, b) => {
+            return groupedBlocks[a].length - groupedBlocks[b].length;
+        });
+
         const numStacks = variants.length; // Should be 5
 
         // Create 5 evenly spaced columns across the container width
-        const padding = 100; // Padding from edges
+        const padding = 300; // Padding from edges
         const availableWidth = containerWidth - (padding * 2);
         const stackSpacing = availableWidth / (numStacks - 1);
 
@@ -354,51 +377,6 @@ export default function BuildingBlocksPhysicsWrapper() {
 
     return (
         <div className="absolute inset-0 w-full h-full pointer-events-none">
-            {/* Playground Controls*/}
-            <div className="absolute bottom-[100px] left-[100px] z-30 pointer-events-auto">
-                {/* Action Buttons */}
-                    {[
-                        { action: resetBlocks, label: 'Reset'},
-                        { action: stackBlocks, label: 'Stack'},
-                        { action: explodeBlocks, label: 'Explode'},
-                        { action: organizeByType, label: 'Organize'},
-                        { action: toggleGravity, label: 'Gravity'}
-                    ].map((button, index) => (
-                        <div
-                            key={button.label}
-                            className="flex flex-row items-center gap-3 transform transition-all duration-300"
-                            style={{ transitionDelay: `${index * 50}ms` }}
-                        >
-                            {/* Action Button */}
-                            <button
-                                onClick={button.action}
-                                disabled={!sizesReady || (isAnimating && button.label !== 'Gravity')}
-                                className={`
-                                    flex flex-row items-center justify-center
-                                    ${sizesReady && (!isAnimating || button.label === 'Gravity')
-                                        ? 'cursor-pointer opacity-100'
-                                        : 'cursor-not-allowed opacity-50'
-                                    }
-                                `}
-                                style={{
-                                    backgroundColor: button.color,
-                                    boxShadow: `0 4px 15px ${button.color}30, 0 2px 8px ${button.color}20`,
-                                }}
-                                onMouseEnter={(e) => {
-                                    if (sizesReady && (!isAnimating || button.label === 'Gravity')) {
-                                        e.target.style.boxShadow = `0 8px 25px ${button.color}40, 0 4px 15px ${button.color}30`;
-                                    }
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.target.style.boxShadow = `0 4px 15px ${button.color}30, 0 2px 8px ${button.color}20`;
-                                }}
-                            >
-                                {button.label}
-                            </button>
-                        </div>
-                    ))}
-            </div>
-
             <div
                 ref={sceneRef}
                 className="absolute inset-0 w-full h-full bg-transparent overflow-hidden pointer-events-none select-none z-20"
@@ -456,7 +434,7 @@ export default function BuildingBlocksPhysicsWrapper() {
             </div>
         </div>
     );
-}
+});
 
 // Improved measurement component
 function MeasureBlock({ block, blockSizeMap, onSizeReady }) {
@@ -479,3 +457,5 @@ function MeasureBlock({ block, blockSizeMap, onSizeReady }) {
         </div>
     );
 }
+
+export default BuildingBlocksPhysicsWrapper;

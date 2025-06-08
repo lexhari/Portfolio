@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 function BuildingBlocks({ variant, className, children, drag = true, dragConstraints = null, onDragEnd }) {
     const getBuildingBlockStyles = () => {
-        const baseClass = "px-4 py-2 text-sm text-white font-dm-sans rounded-xl text-nowrap";
+        const baseClass = "px-4 py-2 text-sm text-white font-medium font-dm-sans rounded-xl text-nowrap";
 
         const variantClasses = {
             "Tools": "bg-[#8DA6F9]",
