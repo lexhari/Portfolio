@@ -1,9 +1,20 @@
-const App = () => {
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Homepage from "./pages/Homepage";
+import About from "./pages/About";
+import Projects from "./pages/Projects";
+import Navbar from "./components/NavBar"; 
+
+function App() {
   return (
-    <div className='flex flex-col gap-10 overflow-x-hidden'>
-      <section></section>
-    </div>
-  )
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/projects" element={<Projects />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
