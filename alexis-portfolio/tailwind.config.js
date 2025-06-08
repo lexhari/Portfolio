@@ -12,11 +12,14 @@ export default {
         'bricolage-grotesque': ['Bricolage Grotesque Variable', 'sans-serif']
       },
       colors: {
-        navyBlue: "#004169",
-        pinkCute: "#FFA8C8",
-        yellowCute: "#FFDF5D",
-        creamBG: "#FFFEF4",
+        navy: "#004169",
+        pink: "#FFA8C8",
+        yellow: "#FFDF5D",
+        creamBG: "#FAF9F6",
         offBlack: "#1f1f1f"
+      },
+      spacing: {
+        'horizontal': '6.25rem'
       }
     },
   },
