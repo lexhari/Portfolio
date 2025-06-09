@@ -118,6 +118,14 @@ function Homepage() {
                     </div>
                 </div>
             </section>
+
+            <section className="w-full h-screen bg-creamBG px-horizontal py-20">
+                <div className="flex flex-row gap-20">
+                    <div className="w-full bg-slate-300 rounded-2xl"></div>
+                    <div className="w-full bg-slate-300 rounded-2xl"></div>
+                    <div className="w-full bg-slate-300 rounded-2xl"></div>
+                </div>
+            </section>
         </div>
     );
 }

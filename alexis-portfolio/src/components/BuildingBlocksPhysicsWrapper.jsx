@@ -39,8 +39,16 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
     const bodyRefs = useRef([]);
     const blockSizeMap = useRef({});
     const [sizesReady, setSizesReady] = useState(false);
-    const [shuffledBlocks] = useState(() => shuffleArray(blockData)); // Shuffle once on component mount
+    const [shuffledBlocks] = useState(() => shuffleArray(blockData));
     const [isAnimating, setIsAnimating] = useState(false);
+
+    // Custom dragging state
+    const dragState = useRef({
+        isDragging: false,
+        draggedBody: null,
+        dragOffset: { x: 0, y: 0 },
+        mousePosition: { x: 0, y: 0 }
+    });
 
     // Notify parent of state changes
     useEffect(() => {
@@ -62,12 +70,57 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
 
     // First effect: Measure sizes
     useEffect(() => {
-        // Wait a frame for DOM to be ready, then trigger size measurement
         const timer = setTimeout(() => {
             setSizesReady(true);
         }, 100);
-
         return () => clearTimeout(timer);
+    }, []);
+
+    // Global mouse event handlers for custom dragging
+    useEffect(() => {
+        const handleGlobalMouseMove = (e) => {
+            dragState.current.mousePosition = { x: e.clientX, y: e.clientY };
+            
+            if (dragState.current.isDragging && dragState.current.draggedBody) {
+                // Get container bounds for coordinate conversion
+                const containerRect = sceneRef.current?.getBoundingClientRect();
+                if (!containerRect) return;
+
+                // Convert screen coordinates to container coordinates
+                const containerX = e.clientX - containerRect.left;
+                const containerY = e.clientY - containerRect.top;
+
+                // Apply the drag offset
+                const targetX = containerX - dragState.current.dragOffset.x;
+                const targetY = containerY - dragState.current.dragOffset.y;
+
+                // Move the body to follow the mouse
+                const body = dragState.current.draggedBody;
+                Matter.Body.setPosition(body, { x: targetX, y: targetY });
+                
+                // Reduce velocity to prevent jittery movement
+                Matter.Body.setVelocity(body, { x: 0, y: 0 });
+                Matter.Body.setAngularVelocity(body, body.angularVelocity * 0.9);
+            }
+        };
+
+        const handleGlobalMouseUp = () => {
+            if (dragState.current.isDragging) {
+                dragState.current.isDragging = false;
+                dragState.current.draggedBody = null;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        };
+
+        // Add global event listeners
+        document.addEventListener('mousemove', handleGlobalMouseMove);
+        document.addEventListener('mouseup', handleGlobalMouseUp);
+
+        return () => {
+            document.removeEventListener('mousemove', handleGlobalMouseMove);
+            document.removeEventListener('mouseup', handleGlobalMouseUp);
+        };
     }, []);
 
     // Second effect: Create physics only after sizes are measured
@@ -86,14 +139,13 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
         engine.positionIterations = 10;
         engine.velocityIterations = 10;
 
-        // Get container dimensions - use parent section size instead of window
+        // Get container dimensions
         const containerWidth = sceneRef.current?.offsetWidth || window.innerWidth;
         const containerHeight = sceneRef.current?.offsetHeight || window.innerHeight;
         const wallThickness = 50;
 
-        // Create boundaries (walls + floor + ceiling)
+        // Create boundaries
         const boundaries = [
-            // Ground (bottom)
             Matter.Bodies.rectangle(
                 containerWidth / 2,
                 containerHeight - wallThickness / 2,
@@ -101,7 +153,6 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
                 wallThickness,
                 { isStatic: true }
             ),
-            // Ceiling (top)
             Matter.Bodies.rectangle(
                 containerWidth / 2,
                 wallThickness / 2,
@@ -109,7 +160,6 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
                 wallThickness + 100,
                 { isStatic: true }
             ),
-            // Left wall
             Matter.Bodies.rectangle(
                 wallThickness / 2,
                 containerHeight / 2,
@@ -117,7 +167,6 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
                 containerHeight,
                 { isStatic: true }
             ),
-            // Right wall
             Matter.Bodies.rectangle(
                 containerWidth - wallThickness / 2,
                 containerHeight / 2,
@@ -127,13 +176,12 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
             )
         ];
 
-        // Add all boundaries to the world
         boundaries.forEach(boundary => {
-            boundary.isBoundary = true; // Flag to identify boundaries
+            boundary.isBoundary = true;
             Matter.Composite.add(world, boundary);
         });
 
-        // Create physics bodies for blocks using shuffled order
+        // Create physics bodies for blocks
         const newBodies = shuffledBlocks.map((block, i) => {
             const size = blockSizeMap.current[block.id];
             if (!size) {
@@ -142,9 +190,8 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
             }
 
             const { width, height } = size;
-            // Randomize position across the upper portion of the screen
-            const startX = Math.random() * (containerWidth - width - 100) + 50; // Random X with padding
-            const startY = Math.random() * (containerHeight * 0.4) + 50; // Random Y in upper 40% of screen
+            const startX = Math.random() * (containerWidth - width - 100) + 50;
+            const startY = Math.random() * (containerHeight * 0.4) + 50;
 
             const box = Matter.Bodies.rectangle(
                 startX,
@@ -154,44 +201,26 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
                 {
                     restitution: 0,
                     friction: 1,
+                    frictionAir: 0.01,
                     density: 0.001,
                 }
             );
             box.renderBlockWidth = width;
             box.renderBlockHeight = height;
             box.data = block;
-            box.isBlock = true; // Flag to identify blocks
+            box.isBlock = true;
             Matter.Composite.add(world, box);
-            console.log(`Created block ${i + 1}/${shuffledBlocks.length}:`, block.text, `at (${startX}, ${startY}) size: ${width}x${height}`);
             return box;
         }).filter(Boolean);
 
-        console.log(`Total blocks created: ${newBodies.length}/${shuffledBlocks.length}`);
-
         bodyRefs.current = newBodies;
         setBodies([...newBodies]);
-
-        // Mouse interaction with improved settings
-        const mouse = Matter.Mouse.create(sceneRef.current);
-        const mouseConstraint = Matter.MouseConstraint.create(engine, {
-            mouse,
-            constraint: {
-                stiffness: 0.2,
-                render: { visible: false },
-            },
-        });
-
-        // Prevent text selection during drag
-        mouse.element.onselectstart = () => false;
-        mouse.element.onmousedown = () => false;
-
-        Matter.Composite.add(world, mouseConstraint);
 
         // Start physics
         const runner = Matter.Runner.create();
         Matter.Runner.run(runner, engine);
 
-        // Animation loop - only update block bodies
+        // Animation loop
         const update = () => {
             const blockBodies = bodyRefs.current.filter(body => body && body.isBlock);
             setBodies([...blockBodies]);
@@ -206,7 +235,37 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
         };
     }, [sizesReady, shuffledBlocks]);
 
-    // Playground functions
+    // Custom mouse down handler for starting drag
+    const handleMouseDown = (e, body) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const containerRect = sceneRef.current?.getBoundingClientRect();
+        if (!containerRect) return;
+
+        // Calculate offset from mouse to body center
+        const containerX = e.clientX - containerRect.left;
+        const containerY = e.clientY - containerRect.top;
+        const offsetX = containerX - body.position.x;
+        const offsetY = containerY - body.position.y;
+
+        // Set drag state
+        dragState.current = {
+            isDragging: true,
+            draggedBody: body,
+            dragOffset: { x: offsetX, y: offsetY },
+            mousePosition: { x: e.clientX, y: e.clientY }
+        };
+
+        // Update body properties for dragging
+        body.frictionAir = 0.05;
+        
+        // Set cursor styles
+        document.body.style.cursor = 'grabbing';
+        document.body.style.userSelect = 'none';
+    };
+
+    // Playground functions remain the same
     const resetBlocks = () => {
         if (!sizesReady || isAnimating) return;
 
@@ -234,9 +293,8 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
         const containerWidth = sceneRef.current?.offsetWidth || window.innerWidth;
         const containerHeight = sceneRef.current?.offsetHeight || window.innerHeight;
         const stackX = containerWidth - 350;
-        let stackY = containerHeight - 75; // Start from bottom
+        let stackY = containerHeight - 75;
 
-        // Sort blocks by size for better stacking
         const sortedBodies = [...bodyRefs.current].sort((a, b) => {
             const aSize = blockSizeMap.current[a.data.id];
             const bSize = blockSizeMap.current[b.data.id];
@@ -252,7 +310,7 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
                     Matter.Body.setVelocity(body, { x: 0, y: 0 });
                     Matter.Body.setAngularVelocity(body, 0);
                     Matter.Body.setAngle(body, 0);
-                    stackY -= size.height + 6; // Add small gap between blocks
+                    stackY -= size.height + 6;
 
                     if (index === sortedBodies.length - 1) {
                         setTimeout(() => setIsAnimating(false), 500);
@@ -266,8 +324,6 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
         if (!sizesReady || isAnimating) return;
 
         setIsAnimating(true);
-        const containerWidth = sceneRef.current?.offsetWidth || window.innerWidth;
-        const containerHeight = sceneRef.current?.offsetHeight || window.innerHeight;
 
         bodyRefs.current.forEach((body) => {
             if (body && body.isBlock) {
@@ -293,7 +349,6 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
         const containerWidth = sceneRef.current?.offsetWidth || window.innerWidth;
         const containerHeight = sceneRef.current?.offsetHeight || window.innerHeight;
 
-        // Group blocks by variant
         const groupedBlocks = {};
         bodyRefs.current.forEach((body) => {
             if (body && body.isBlock) {
@@ -305,27 +360,19 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
             }
         });
 
-        // Sort variants by the number of blocks (ascending order)
-        // This way the largest stack will be last (rightmost)
         const variants = Object.keys(groupedBlocks).sort((a, b) => {
             return groupedBlocks[a].length - groupedBlocks[b].length;
         });
 
-        const numStacks = variants.length; // Should be 5
-
-        // Create 5 evenly spaced columns across the container width
-        const padding = 300; // Padding from edges
+        const numStacks = variants.length;
+        const padding = 300;
         const availableWidth = containerWidth - (padding * 2);
         const stackSpacing = availableWidth / (numStacks - 1);
 
         variants.forEach((variant, variantIndex) => {
-            // Calculate X position for this stack
             const stackX = padding + (stackSpacing * variantIndex);
+            let stackY = containerHeight - 100;
 
-            // Start stacking from the bottom
-            let stackY = containerHeight - 100; // Start from bottom with some padding
-
-            // Sort blocks within each group by size (largest at bottom for stability)
             const sortedBlocks = groupedBlocks[variant].sort((a, b) => {
                 const aSize = blockSizeMap.current[a.data.id];
                 const bSize = blockSizeMap.current[b.data.id];
@@ -336,7 +383,6 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
                 const size = blockSizeMap.current[body.data.id];
 
                 setTimeout(() => {
-                    // Position block in the stack
                     Matter.Body.setPosition(body, {
                         x: stackX,
                         y: stackY - size.height / 2
@@ -345,14 +391,11 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
                     Matter.Body.setAngularVelocity(body, 0);
                     Matter.Body.setAngle(body, 0);
 
-                    // Move up for next block in stack
-                    stackY -= size.height + 5; // Add small gap between blocks
-
-                }, variantIndex * 150 + blockIndex * 100); // Stagger animation timing
+                    stackY -= size.height + 5;
+                }, variantIndex * 150 + blockIndex * 100);
             });
         });
 
-        // Calculate total animation time and set isAnimating to false when done
         const totalAnimationTime = variants.length * 150 + Math.max(...variants.map(v => groupedBlocks[v].length)) * 100 + 500;
         setTimeout(() => setIsAnimating(false), totalAnimationTime);
     };
@@ -364,13 +407,10 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
         const currentGravity = engine.gravity.y;
 
         if (currentGravity > 0) {
-            // Reverse gravity
             engine.gravity.y = -1;
         } else if (currentGravity < 0) {
-            // Zero gravity
             engine.gravity.y = 0;
         } else {
-            // Normal gravity
             engine.gravity.y = 1;
         }
     };
@@ -381,7 +421,7 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
                 ref={sceneRef}
                 className="absolute inset-0 w-full h-full bg-transparent overflow-hidden pointer-events-none select-none z-20"
             >
-                {/* Measure original block sizes first - only render when needed */}
+                {/* Measure original block sizes first */}
                 {!sizesReady && (
                     <div className="absolute opacity-0 pointer-events-none -top-[1000px]">
                         {shuffledBlocks.map((block) => (
@@ -390,7 +430,6 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
                                 block={block}
                                 blockSizeMap={blockSizeMap}
                                 onSizeReady={() => {
-                                    // Check if all sizes are ready
                                     if (Object.keys(blockSizeMap.current).length === shuffledBlocks.length) {
                                         setSizesReady(true);
                                     }
@@ -400,32 +439,28 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
                     </div>
                 )}
 
-                {/* Physics-rendered blocks - only render after physics is ready */}
+                {/* Physics-rendered blocks with custom drag handling */}
                 {sizesReady && bodies.map((body, i) => {
                     if (!body || !body.data) return null;
 
                     const { x, y } = body.position;
                     const angle = body.angle;
                     const { text, variant } = body.data;
+                    const isDragging = dragState.current.draggedBody === body;
 
                     return (
                         <div
                             key={`physics-${body.data.id}`}
-                            className="absolute pointer-events-auto select-none cursor-grab"
+                            className={`absolute pointer-events-auto select-none ${
+                                isDragging ? 'cursor-grabbing' : 'cursor-grab'
+                            }`}
                             style={{
                                 left: x,
                                 top: y,
                                 transform: `translate(-50%, -50%) rotate(${angle}rad)`,
+                                zIndex: isDragging ? 1000 : 'auto',
                             }}
-                            onMouseDown={(e) => {
-                                e.target.style.cursor = 'grabbing';
-                            }}
-                            onMouseUp={(e) => {
-                                e.target.style.cursor = 'grab';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.target.style.cursor = 'grab';
-                            }}
+                            onMouseDown={(e) => handleMouseDown(e, body)}
                         >
                             <BuildingBlocks variant={variant}>{text}</BuildingBlocks>
                         </div>
@@ -436,13 +471,12 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
     );
 });
 
-// Improved measurement component
+// Measurement component remains the same
 function MeasureBlock({ block, blockSizeMap, onSizeReady }) {
     const ref = useRef(null);
 
     useEffect(() => {
         if (ref.current) {
-            // Get the actual rendered dimensions of the BuildingBlocks component
             const rect = ref.current.getBoundingClientRect();
             const width = rect.width;
             const height = rect.height;
