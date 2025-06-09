@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
-import { Circle, CircleDot, Moon, Group, Wand, Layers, RotateCcw } from 'lucide-react';
+import { Circle, CircleDot, Moon, Group, Wand, Layers, RotateCcw, MoveRight } from 'lucide-react';
 import BuildingBlocksPhysicsWrapper from "../components/BuildingBlocksPhysicsWrapper";
 import Badge from '../components/Badge';
+import Button from '../components/Button';
 
 function Homepage() {
     const physicsRef = useRef(null);
@@ -67,6 +68,7 @@ function Homepage() {
 
     return (
         <div>
+            {/* Hero */}
             <section className="relative overflow-hidden w-full h-screen bg-creamBG px-horizontal py-20 flex flex-row items-center select-none">
                 {/* Content layer */}
                 <div className="relative z-10 flex flex-col gap-10 justify-between w-[60%]">
@@ -102,13 +104,28 @@ function Homepage() {
                 <BuildingBlocksPhysicsWrapper ref={physicsRef} onStateChange={handleStateChange} />
             </section>
 
-            <section className="flex flex-row overflow-hidden w-full h-screen bg-creamBG px-horizontal py-20 gap-20">
+            {/* Projects */}
+            <section className="w-full h-screen bg-creamBG px-horizontal py-20">
+                <div className="flex flex-row gap-5 w-full h-full">
+                    <div className="w-1/3 bg-slate-300 rounded-2xl hover:w-[100%] transition-all duration-300">
+                        <p>a</p>
+                    </div>
+                    <div className="w-1/3 bg-slate-300 rounded-2xl hover:w-[100%] transition-all duration-300">
+                        <p>a</p>
+                    </div>
+                    <div className="w-1/3 bg-slate-300 rounded-2xl hover:w-[100%] transition-all duration-300">
+                        <p>a</p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Results Overview */}
+            <section className="sticky top-0 flex flex-row overflow-hidden w-full h-screen bg-creamBG px-horizontal py-20 gap-20">
                 <div className="flex flex-col h-full w-[50%]">
                     <Badge>I don't just click, scroll, and type!</Badge>
                     <div className="flex h-full justify-center items-center w-full">
                         <h1 className="text-6xl font-bricolage-grotesque text-navy font-medium">My experience in the community has greatly enhanced my awareness in user needs.</h1>
                     </div>
-                        
                 </div>
                 <div className="flex flex-col h-full justify-between items-end w-[50%]">
                     <div className="w-full h-[60%] bg-slate-300 rounded-2xl">
@@ -119,11 +136,17 @@ function Homepage() {
                 </div>
             </section>
 
-            <section className="w-full h-screen bg-creamBG px-horizontal py-20">
-                <div className="flex flex-row gap-20">
-                    <div className="w-full bg-slate-300 rounded-2xl"></div>
-                    <div className="w-full bg-slate-300 rounded-2xl"></div>
-                    <div className="w-full bg-slate-300 rounded-2xl"></div>
+            {/* Photo */}
+            <section className="sticky top-0 w-full h-screen bg-creamBG ">
+                <div className="sticky top-0 w-full h-[50%] bg-slate-300 ">
+                </div>
+                <div className="absolute bottom-0 w-full h-[55%] bg-navy rounded-t-2xl flex flex-row justify-between px-horizontal">
+                    <div className="w-[60%] h-full flex flex-col justify-center items-center">
+                        <p className="text-creamBG text-3xl font-bricolage-grotesque font-thin"><span className="font-semibold">By observing friction,</span> not just in workflows but also in <span className="font-semibold">interpersonal dynamics,</span> I designed solutions that improved both efficiency and community well-being — believing that <span className="font-semibold">good design supports people, not just processes.</span></p>
+                    </div>
+                    <div className="w-[40%] h-full flex flex-col justify-center items-end">
+                        <Button href="/about" variant="link" className="text-creamBG uppercase font-bold flex gap-3">See more of who I am <MoveRight /></Button>
+                    </div>
                 </div>
             </section>
         </div>
