@@ -82,7 +82,6 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
             dragState.current.mousePosition = { x: e.clientX, y: e.clientY };
             
             if (dragState.current.isDragging && dragState.current.draggedBody) {
-                // Get container bounds for coordinate conversion
                 const containerRect = sceneRef.current?.getBoundingClientRect();
                 if (!containerRect) return;
 
@@ -94,9 +93,25 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
                 const targetX = containerX - dragState.current.dragOffset.x;
                 const targetY = containerY - dragState.current.dragOffset.y;
 
-                // Move the body to follow the mouse
+                // Get container dimensions for boundary checking
+                const containerWidth = containerRect.width;
+                const containerHeight = containerRect.height;
+                const wallThickness = 50;
+
+                // Constrain the target position within container bounds
+                // This prevents the object from disappearing when mouse goes out of bounds
+                const constrainedX = Math.max(
+                    wallThickness, 
+                    Math.min(containerWidth - wallThickness, targetX)
+                );
+                const constrainedY = Math.max(
+                    wallThickness, 
+                    Math.min(containerHeight - wallThickness, targetY)
+                );
+
+                // Move the body to the constrained position
                 const body = dragState.current.draggedBody;
-                Matter.Body.setPosition(body, { x: targetX, y: targetY });
+                Matter.Body.setPosition(body, { x: constrainedX, y: constrainedY });
                 
                 // Reduce velocity to prevent jittery movement
                 Matter.Body.setVelocity(body, { x: 0, y: 0 });
@@ -106,6 +121,11 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
 
         const handleGlobalMouseUp = () => {
             if (dragState.current.isDragging) {
+                // Reset friction when dropping
+                if (dragState.current.draggedBody) {
+                    dragState.current.draggedBody.frictionAir = 0.01;
+                }
+                
                 dragState.current.isDragging = false;
                 dragState.current.draggedBody = null;
                 document.body.style.cursor = '';
