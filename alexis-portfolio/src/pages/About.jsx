@@ -53,28 +53,41 @@ function About() {
             <section className="sticky top-0 w-full h-screen bg-creamBG ">
                 <div className="sticky top-0 w-full h-[50%] bg-slate-300 ">
                 </div>
-                <div className="absolute bottom-0 w-full h-[55%] bg-navy rounded-t-2xl px-horizontal">
+                <div className="absolute bottom-0 w-full h-fit bg-creamBG rounded-t-2xl px-horizontal py-12 flex flex-col gap-20">
                     <Badge>The game changer</Badge>
 
-                    <div className="flex flex-row gap-10">
-                        <div>a</div>
-                        <div>b</div>
+                    <div className="flex flex-col gap-10">
+                        <div className="flex flex-row gap-40 text-navy font-normal ">
+                            <div className="w-1/2">
+                                <p className="text-2xl font-bricolage-grotesque">In 2024, COMSCI@UP.BAG was left with 25 members graduating (a projected 47% drop in our active base); my team and I recognized the urgency to revitalize recruitment. </p>
+                            </div>
+                            <div className="w-1/2">
+                                <p className="text-md font-dm-sans">Welcoming 56 participants during the Mass Orientation and achieving a 98% application confirmation rate. This became a notable increase from previous years.</p>
+                            </div>
+                        </div>
+                        <div className="text-navy font-bricolage-grotesque text-4xl">
+                            <p>We’re a growing, student-centered community—far from perfect, but driven by solutions. If there’s only one value I can take from this experience, it’s that <span className="font-bold">success is definitely a team game.</span></p>
+                        </div>
                     </div>
-                    <div>c</div>
                 </div>
             </section>
 
             <section className="sticky top-0 w-full h-screen bg-creamBG ">
                 <div className="sticky top-0 w-full h-[50%] bg-slate-300 ">
                 </div>
-                <div className="absolute bottom-0 w-full h-[55%] bg-navy rounded-t-2xl px-horizontal">
-                    <Badge>The game changer</Badge>
+                <div className="absolute bottom-0 w-full h-fit bg-creamBG rounded-t-2xl px-horizontal py-12 flex flex-col gap-20">
+                    <Badge>Everything else in between</Badge>
 
-                    <div className="flex flex-row gap-10">
-                        <div>a</div>
-                        <div>b</div>
+                    <div className="flex flex-row gap-40 font-bricolage-grotesque text-xl text-navy">
+                        <div className="flex flex-col gap-10">
+                            <p>I’m a self-taught artist with a strong love for painting. This is where my spark for graphic visual design came from.</p>
+                            <p>I enjoy playing video games, weight training, and hitting the golf driving range to unwind. I've also dabbled in producing music and playing instruments, though that passion is currently on pause (thanks to a student budget!).</p>
+                        </div>
+                        <div className="flex flex-col gap-10">
+                            <p>I’d still describe myself as a bit of a girly pop at heart. I love expressing myself through fashion and makeup. It’s this balance of soft and strong that really shapes who I am, both personally and creatively.</p>
+                            <p>I take every chance I get to travel with my family, but I also aspire to explore the world on my own one day. I’m especially passionate about learning different histories and cultures — I’m a bit of a nerd, and I find so much inspiration in how people live, create, and connect across the globe.</p>
+                        </div>
                     </div>
-                    <div>c</div>
                 </div>
             </section>
         </div>
