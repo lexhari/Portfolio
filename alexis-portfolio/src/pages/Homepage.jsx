@@ -3,11 +3,29 @@ import { Circle, CircleDot, Moon, Group, Wand, Layers, RotateCcw, MoveRight } fr
 import BuildingBlocksPhysicsWrapper from "../components/BuildingBlocksPhysicsWrapper";
 import Badge from '../components/Badge';
 import Button from '../components/Button';
+import ScrollSequenceCard from '../components/ScrollSequenceCard';
 
 function Homepage() {
     const physicsRef = useRef(null);
     const [physicsState, setPhysicsState] = useState({ isReady: false, isAnimating: false });
     const [gravityState, setGravityState] = useState('normal'); // 'normal', 'reverse', 'zero'
+
+    const containerRef = useRef(null);
+
+    const cardData = [
+        {
+            id: 1,
+            title: "I transformed the onboarding experience for COMSCI@UP.BAG, increasing engagement and application confirmation rates through a user-centered redesign.",
+            imageAlt: "COMSCI onboarding transformation",
+            imageSrc: "/assets/images/placeholder.png" // Replace with your actual image paths
+        },
+        {
+            id: 2,
+            title: "I further introduced standardized operational processes across COMSCI@UP.BAG, including in event coordination.",
+            imageAlt: "Operational processes standardization",
+            imageSrc: "/assets/images/placeholder.png" // Replace with your actual image paths
+        }
+    ];
 
     const handleStateChange = (state) => {
         setPhysicsState(state);
@@ -119,22 +137,36 @@ function Homepage() {
                 </div>
             </section>
 
-            {/* Results Overview */}
-            <section className="sticky top-0 flex flex-row overflow-hidden w-full h-screen bg-creamBG px-horizontal py-20 gap-20">
-                <div className="flex flex-col h-full w-[50%]">
-                    <Badge>I don't just click, scroll, and type!</Badge>
-                    <div className="flex h-full justify-center items-center w-full">
-                        <h1 className="text-6xl font-bricolage-grotesque text-navy font-medium">My experience in the community has greatly enhanced my awareness in user needs.</h1>
-                    </div>
+            <div ref={containerRef} className="relative">
+                {/* Create enough scroll space for all cards to animate */}
+                <div className="h-[300vh]"> {/* This creates the scroll space - adjust as needed */}
+                    {/* Results Overview */}
+                    <section className="sticky top-0 flex flex-row overflow-hidden w-full h-screen bg-creamBG px-horizontal py-20 gap-20">
+                        <div className="flex flex-col h-screen w-[50%] sticky top-20">
+                            <Badge>I don't just click, scroll, and type!</Badge>
+                            <div className="flex h-full justify-center items-center w-full">
+                                <h1 className="text-6xl font-bricolage-grotesque text-navy font-medium">
+                                    My experience in the community has greatly enhanced my awareness in user needs.
+                                </h1>
+                            </div>
+                        </div>
+                        
+                        <div className="flex flex-col h-screen w-[50%] sticky relative">
+                            {cardData.map((card, index) => (
+                                <ScrollSequenceCard
+                                    key={card.id}
+                                    id={card.id}
+                                    title={card.title}
+                                    imageAlt={card.imageAlt}
+                                    imageSrc={card.imageSrc}
+                                    containerRef={containerRef}
+                                    totalCards={cardData.length}
+                                />
+                            ))}
+                        </div>
+                    </section>
                 </div>
-                <div className="flex flex-col h-full justify-between items-end w-[50%]">
-                    <div className="w-full h-[60%] bg-slate-300 rounded-2xl">
-                    </div>
-                    <div className="w-[90%]">
-                        <p className="text-navy text-3xl font-dm-sans font-semibold text-right">I transformed the onboarding experience for COMSCI@UP.BAG, increasing engagement and application confirmation rates through a user-centered redesign.</p>
-                    </div>
-                </div>
-            </section>
+            </div>
 
             {/* Photo */}
             <section className="sticky top-0 w-full h-screen bg-creamBG ">

@@ -47,13 +47,14 @@ function About() {
                     </div>
                     <div className="col-start-1 row-start-1 text-navy font-medium font-bricolage-grotesque">Tech & Development</div>
                 </div>
-
             </section>
 
-            <section className="sticky top-0 w-full h-screen bg-creamBG ">
-                <div className="sticky top-0 w-full h-[50%] bg-slate-300 ">
-                </div>
-                <div className="absolute bottom-0 w-full h-fit bg-creamBG rounded-t-2xl px-horizontal py-12 flex flex-col gap-20">
+            <section className="sticky top-0 w-full h-screen bg-slate-300">
+                <img src="src/assets/images/placeholder.jpg" alt="about-1" className="w-full h-full object-cover" />
+            </section>
+
+            <section className="w-full h-fit bg-creamBG">
+                <div className="relative top-[-100px] flex flex-col gap-20 rounded-t-2xl px-horizontal py-12 bg-creamBG">
                     <Badge>The game changer</Badge>
 
                     <div className="flex flex-col gap-10">
@@ -72,13 +73,15 @@ function About() {
                 </div>
             </section>
 
-            <section className="sticky top-0 w-full h-screen bg-creamBG ">
-                <div className="sticky top-0 w-full h-[50%] bg-slate-300 ">
-                </div>
-                <div className="absolute bottom-0 w-full h-fit bg-creamBG rounded-t-2xl px-horizontal py-12 flex flex-col gap-20">
+            <section className="sticky top-0 w-full h-screen bg-slate-300">
+                <img src="src/assets/images/placeholder.jpg" alt="about-1" className="w-full h-full object-cover" />
+            </section>
+
+            <section className="w-full h-fit bg-creamBG">
+                <div className="relative top-[-100px] flex flex-col gap-20 rounded-t-2xl px-horizontal py-12 bg-creamBG">
                     <Badge>Everything else in between</Badge>
 
-                    <div className="flex flex-row gap-40 font-bricolage-grotesque text-xl text-navy">
+                    <div className="flex flex-row gap-40 font-bricolage-grotesque text-xl text-navy rounded-t-2xl">
                         <div className="flex flex-col gap-10">
                             <p>I’m a self-taught artist with a strong love for painting. This is where my spark for graphic visual design came from.</p>
                             <p>I enjoy playing video games, weight training, and hitting the golf driving range to unwind. I've also dabbled in producing music and playing instruments, though that passion is currently on pause (thanks to a student budget!).</p>
