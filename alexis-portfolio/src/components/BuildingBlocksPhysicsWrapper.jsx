@@ -348,7 +348,7 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
         bodyRefs.current.forEach((body) => {
             if (body && body.isBlock) {
                 const angle = Math.random() * Math.PI * 2;
-                const force = Math.random() * 0.1 + 0.05;
+                const force = Math.random() * 0.1 + 0.1;
                 const forceVector = {
                     x: Math.cos(angle) * force,
                     y: Math.sin(angle) * force
@@ -359,7 +359,7 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
             }
         });
 
-        setTimeout(() => setIsAnimating(false), 2000);
+        setTimeout(() => setIsAnimating(false), 300);
     };
 
     const organizeByType = () => {

@@ -54,7 +54,7 @@ function About() {
             </section>
 
             <section className="w-full h-fit bg-creamBG">
-                <div className="relative top-[-100px] flex flex-col gap-20 rounded-t-2xl px-horizontal py-12 bg-creamBG">
+                <div className="relative flex flex-col gap-20 rounded-t-2xl px-horizontal py-14 bg-creamBG">
                     <Badge>The game changer</Badge>
 
                     <div className="flex flex-col gap-10">
@@ -73,12 +73,13 @@ function About() {
                 </div>
             </section>
 
+
             <section className="sticky top-0 w-full h-screen bg-slate-300">
                 <img src="src/assets/images/placeholder.jpg" alt="about-1" className="w-full h-full object-cover" />
             </section>
 
             <section className="w-full h-fit bg-creamBG">
-                <div className="relative top-[-100px] flex flex-col gap-20 rounded-t-2xl px-horizontal py-12 bg-creamBG">
+                <div className="relative flex flex-col gap-20 rounded-t-2xl px-horizontal py-14 bg-creamBG">
                     <Badge>Everything else in between</Badge>
 
                     <div className="flex flex-row gap-40 font-bricolage-grotesque text-xl text-navy rounded-t-2xl">

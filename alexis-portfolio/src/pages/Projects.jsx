@@ -20,7 +20,7 @@ import ProjectItem from "../components/ProjectItem";
             imageSrc: "/assets/images/placeholder.png" // Replace with your actual image paths
         },
         {
-            title: "Mobile App",
+            title: "Mobile App", 
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
             imageAlt: "Project4",
             imageSrc: "/assets/images/placeholder.png" // Replace with your actual image paths

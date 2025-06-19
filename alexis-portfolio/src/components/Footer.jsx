@@ -23,6 +23,7 @@ function Footer() {
                     <Button href="https://www.linkedin.com/in/lexharriet/" variant="outlined" newTab={true} className="flex flex-row gap-2">LinkedIn <ArrowUpRight className="w-auto h-auto"/></Button>
                     <Button href="https://github.com/lexhari" variant="outlined" newTab={true} className="flex flex-row gap-2">GitHub <ArrowUpRight className="w-auto h-auto"/></Button>
                     <Button href="https://www.instagram.com/lexharriet/" variant="outlined" newTab={true} className="flex flex-row gap-2">Instagram <ArrowUpRight className="w-auto h-auto"/></Button>
+                    <Button href="https://discordapp.com/users/758302953974399017">Discord <ArrowUpRight className="w-auto h-auto"/></Button>
                 </div>
             </div>
         </footer>
