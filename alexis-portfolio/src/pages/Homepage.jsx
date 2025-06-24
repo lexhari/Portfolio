@@ -150,7 +150,7 @@ function Homepage() {
                 <div className="h-[300vh]"> {/* This creates the scroll space - adjust as needed */}
                     {/* Results Overview */}
                     <section className="sticky top-0 flex flex-row overflow-hidden w-full h-screen bg-creamBG px-horizontal py-20 gap-20">
-                        <div className="flex flex-col h-screen w-[50%] sticky top-20">
+                        <div className="flex flex-col py-10 h-screen w-[50%] sticky top-0">
                             <Badge>I don't just click, scroll, and type!</Badge>
                             <div className="flex h-full justify-center items-center w-full">
                                 <h1 className="text-6xl font-bricolage-grotesque text-navy font-medium">
