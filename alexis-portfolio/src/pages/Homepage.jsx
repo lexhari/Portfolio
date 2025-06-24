@@ -4,6 +4,7 @@ import BuildingBlocksPhysicsWrapper from "../components/BuildingBlocksPhysicsWra
 import Badge from '../components/Badge';
 import Button from '../components/Button';
 import ScrollSequenceCard from '../components/ScrollSequenceCard';
+import { motion, useScroll } from 'framer-motion';
 
 function Homepage() {
     const physicsRef = useRef(null);
@@ -84,8 +85,15 @@ function Homepage() {
         { action: 'gravity', label: 'Gravity', icon: getGravityIcon() }
     ];
 
+    const { scrollYProgress } = useScroll();
+
     return (
         <div>
+            {/* Scroll Progress Bar */}
+            <motion.div className='fixed right-0 top-0 w-2 h-full bg-gray-500 z-50'>
+                <motion.div className='bg-pink w-full origin-top' style={{scaleY: scrollYProgress, position: 'absolute', top: 0, left: 0, bottom: 0 }} />
+            </motion.div>
+
             {/* Hero */}
             <section className="relative overflow-hidden w-full h-screen bg-creamBG px-horizontal py-20 flex flex-row items-center select-none">
                 {/* Content layer */}
