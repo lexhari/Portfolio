@@ -13,15 +13,16 @@ export default function ScrollSequenceCard({
     imageAlt,
     imageSrc,
     containerRef,
-    totalCards = 2
+    totalCards
 }) {
-    const cardRef = useRef(null)
-    
-    // Track scroll progress of the entire container
+    const cardRef = useRef(null)    // Track scroll progress only when section is in sticky position
     const { scrollYProgress } = useScroll({
         target: containerRef,
-        offset: ["start start", "end start"]
+        offset: ["start start", "end start"]  // Only track when section is sticky
     })
+    
+    // Calculate the viewport height segment for each card, reserve last 25% for transition
+    const segmentSize = 0.75 / totalCards
     
     // Create scroll ranges for each card
     const cardIndex = id - 1 // Convert to 0-based index
@@ -30,26 +31,26 @@ export default function ScrollSequenceCard({
     let fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd
     
     if (cardIndex === 0) {
-        // First card: starts immediately, no fade in
+        // First card: starts fully visible (no fade in) and fades out at its segment end
         fadeInStart = 0
         fadeInEnd = 0
-        fadeOutStart = (1 / totalCards) - 0.02
-        fadeOutEnd = 1 / totalCards
+        fadeOutStart = segmentSize - 0.1
+        fadeOutEnd = segmentSize
     } else if (cardIndex === totalCards - 1) {
-        // Last card: doesn't fade out, stays till end
-        fadeInStart = cardIndex / totalCards
-        fadeInEnd = cardIndex / totalCards + 0.02
-        fadeOutStart = 1
-        fadeOutEnd = 1
+        // Last card: fades in at its segment start and stays visible till the end
+        fadeInStart = cardIndex * segmentSize
+        fadeInEnd = (cardIndex * segmentSize) + 0.1
+        fadeOutStart = 1  // Never starts fading out
+        fadeOutEnd = 1    // Never fades out
     } else {
-        // Middle cards: normal behavior
-        const startRange = cardIndex / totalCards
-        const endRange = (cardIndex + 1) / totalCards
+        // Middle cards: fade in at their segment start, fade out at their segment end
+        const segmentStart = cardIndex * segmentSize
+        const segmentEnd = (cardIndex + 1) * segmentSize
         
-        fadeInStart = startRange
-        fadeInEnd = startRange + 0.05
-        fadeOutStart = endRange - 0.05
-        fadeOutEnd = endRange
+        fadeInStart = segmentStart
+        fadeInEnd = segmentStart + 0.1
+        fadeOutStart = segmentEnd - 0.1
+        fadeOutEnd = segmentEnd
     }
     
     const rawOpacity = useTransform(
@@ -95,7 +96,7 @@ export default function ScrollSequenceCard({
             className="absolute inset-0 w-full h-full flex flex-col justify-center items-end"
             style={{ opacity, y, scale }}
         >
-            <div className="w-full h-80 bg-slate-300 rounded-2xl mb-4 overflow-hidden">
+            <div className="w-full h-[60%] bg-slate-300 rounded-2xl mb-4 overflow-hidden">
                 {imageSrc ? (
                     <img 
                         src={imageSrc} 
@@ -109,7 +110,7 @@ export default function ScrollSequenceCard({
                 )}
             </div>
             <div className="w-[90%] ml-auto">
-                <p className="text-navy text-2xl font-dm-sans font-semibold text-right">
+                <p className="text-navy text-xl font-dm-sans font-medium text-right">
                     {title}
                 </p>
             </div>

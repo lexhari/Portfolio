@@ -25,6 +25,12 @@ function Homepage() {
             title: "I further introduced standardized operational processes across COMSCI@UP.BAG, including in event coordination.",
             imageAlt: "Operational processes standardization",
             imageSrc: "/assets/images/placeholder.png" // Replace with your actual image paths
+        },
+        {
+            id: 3,
+            title: "Along the way, I built connections and learned the power of empathy in every design I create.",
+            imageAlt: "Empathy in design",
+            imageSrc: "/assets/images/placeholder.png" // Replace with your actual image paths
         }
     ];
 
@@ -91,7 +97,7 @@ function Homepage() {
         <div>
             {/* Scroll Progress Bar */}
             <motion.div className='fixed right-0 top-0 w-2 h-full bg-gray-500 z-50'>
-                <motion.div className='bg-pink w-full origin-top' style={{scaleY: scrollYProgress, position: 'absolute', top: 0, left: 0, bottom: 0 }} />
+                <motion.div className='bg-pink w-full origin-top' style={{ scaleY: scrollYProgress, position: 'absolute', top: 0, left: 0, bottom: 0 }} />
             </motion.div>
 
             {/* Hero */}
@@ -143,11 +149,9 @@ function Homepage() {
                         <p>a</p>
                     </div>
                 </div>
-            </section>
-
-            <div ref={containerRef} className="relative">
+            </section>            <div ref={containerRef} className="relative">
                 {/* Create enough scroll space for all cards to animate */}
-                <div className="h-[300vh]"> {/* This creates the scroll space - adjust as needed */}
+                <div className="h-[400vh]">
                     {/* Results Overview */}
                     <section className="sticky top-0 flex flex-row overflow-hidden w-full h-screen bg-creamBG px-horizontal py-10 gap-20">
                         <div className="flex flex-col h-screen w-[50%] sticky top-0 justify-center gap-20">
@@ -158,7 +162,7 @@ function Homepage() {
                                 </h1>
                             </div>
                         </div>
-                        
+
                         <div className="flex flex-col h-screen w-[50%] sticky relative">
                             {cardData.map((card, index) => (
                                 <ScrollSequenceCard

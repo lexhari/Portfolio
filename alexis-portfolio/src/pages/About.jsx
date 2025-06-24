@@ -5,7 +5,7 @@ function About() {
         <div className="bg-creamBG">
             <section className="flex flex-row w-full h-screen bg-creamBG px-horizontal py-[100px] gap-12">
                 <div className="w-full h-full flex flex-col justify-center items-center">
-                    <div className="w-full h-full bg-slate-300 rounded-xl hover:scale-110 hover:rotate-[3deg] transition-all duration-300">
+                    <div className="w-full h-full bg-slate-300 rounded-xl hover:scale-110 hover:rotate-[-3deg] transition-all duration-300">
                     </div>
                 </div>
                 <div className="w-full h-full flex flex-col justify-center gap-20">
