@@ -149,10 +149,10 @@ function Homepage() {
                 {/* Create enough scroll space for all cards to animate */}
                 <div className="h-[300vh]"> {/* This creates the scroll space - adjust as needed */}
                     {/* Results Overview */}
-                    <section className="sticky top-0 flex flex-row overflow-hidden w-full h-screen bg-creamBG px-horizontal py-20 gap-20">
-                        <div className="flex flex-col py-10 h-screen w-[50%] sticky top-0">
+                    <section className="sticky top-0 flex flex-row overflow-hidden w-full h-screen bg-creamBG px-horizontal py-10 gap-20">
+                        <div className="flex flex-col h-screen w-[50%] sticky top-0 justify-center gap-20">
                             <Badge>I don't just click, scroll, and type!</Badge>
-                            <div className="flex h-full justify-center items-center w-full">
+                            <div className="flex justify-center items-center w-full">
                                 <h1 className="text-6xl font-bricolage-grotesque text-navy font-medium">
                                     My experience in the community has greatly enhanced my awareness in user needs.
                                 </h1>
