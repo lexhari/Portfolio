@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import Matter from 'matter-js';
-import BuildingBlocks from './BuildingBlocks'; // Your existing styled component
+import BuildingBlocks from './building-blocks';
 
 const blockData = [
     { id: 1, variant: 'Tools', text: 'React JS' },

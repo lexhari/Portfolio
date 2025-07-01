@@ -1,5 +1,5 @@
-import ProjectItem from "../components/ProjectItem";
-import Badge from "../components/Badge";
+import ProjectItem from "../components/project-item";
+import Badge from "../components/badge";
 
 const projectData = [
     {

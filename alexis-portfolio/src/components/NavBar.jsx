@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Button from "./Button";
+import Button from "./custom-button";
 
 function Navbar() {
     const [show, setShow] = useState(true);

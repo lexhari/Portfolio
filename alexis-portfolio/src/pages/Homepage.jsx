@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { Circle, CircleDot, Moon, Group, Wand, Layers, RotateCcw, MoveRight } from 'lucide-react';
-import BuildingBlocksPhysicsWrapper from "../components/BuildingBlocksPhysicsWrapper";
-import Badge from '../components/Badge';
-import Button from '../components/Button';
-import ScrollSequenceCard from '../components/ScrollSequenceCard';
+import BuildingBlocksPhysicsWrapper from "../components/buildingBlocks-physicsWrapper";
+import Badge from '../components/badge';
+import Button from '../components/custom-button';
+import ScrollSequenceCard from '../components/scroll-sequenceCard';
 import { motion, useScroll } from 'framer-motion';
 
 function Homepage() {

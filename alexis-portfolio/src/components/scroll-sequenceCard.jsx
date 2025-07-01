@@ -15,11 +15,23 @@ export default function ScrollSequenceCard({
     containerRef,
     totalCards
 }) {
-    const cardRef = useRef(null)    // Track scroll progress only when section is in sticky position
-    const { scrollYProgress } = useScroll({
+    const cardRef = useRef(null)    // Track scroll progress only when section is in sticky position    // For the first card, we want to track from when the section becomes sticky
+    // For other cards, we track from the start of the section    // Track the overall section scroll progress
+    const { scrollYProgress: sectionProgress } = useScroll({
         target: containerRef,
-        offset: ["start start", "end start"]  // Only track when section is sticky
+        offset: ["start end", "start start"]  // From section entering viewport to becoming sticky
     })
+
+    // Track progress only when section is sticky
+    const { scrollYProgress: stickyProgress } = useScroll({
+        target: containerRef,
+        offset: ["start start", "end start"]
+    })
+
+    // For first card, use combined scroll progress
+    const scrollYProgress = id === 1 
+        ? sectionProgress  // Use section progress for first card
+        : stickyProgress  // Use sticky progress for other cards
     
     // Calculate the viewport height segment for each card, reserve last 25% for transition
     const segmentSize = 0.75 / totalCards
@@ -29,13 +41,12 @@ export default function ScrollSequenceCard({
     
     // Adjust ranges to remove empty slots at beginning and end
     let fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd
-    
-    if (cardIndex === 0) {
-        // First card: starts fully visible (no fade in) and fades out at its segment end
+      if (cardIndex === 0) {
+        // First card: visible until section becomes sticky, then follows scroll
         fadeInStart = 0
         fadeInEnd = 0
-        fadeOutStart = segmentSize - 0.1
-        fadeOutEnd = segmentSize
+        fadeOutStart = 0.9  // Start fade out just before section becomes sticky
+        fadeOutEnd = 1.0    // Complete fade out when section is sticky
     } else if (cardIndex === totalCards - 1) {
         // Last card: fades in at its segment start and stays visible till the end
         fadeInStart = cardIndex * segmentSize
