@@ -5,6 +5,12 @@ import Badge from '../components/badge';
 import Button from '../components/custom-button';
 import ScrollSequenceCard from '../components/scroll-sequenceCard';
 import { motion, useScroll } from 'framer-motion';
+import { useEffect } from 'react';
+import internalsPhoto from '../assets/images/internals-photo.jpg';
+import eventPhoto from '../assets/images/event-photo.jpg';
+import hariCraft from '../assets/images/hari-craft.jpg';
+import alumniPhoto from '../assets/images/alumni-photo.jpg';
+import photoOfMe from '../assets/images/me1.jpg';
 
 function Homepage() {
     const physicsRef = useRef(null);
@@ -13,24 +19,43 @@ function Homepage() {
 
     const containerRef = useRef(null);
 
+    useEffect(() => {
+        // Scroll to top on page load
+        setTimeout(() => {
+            window.scrollTo(0, 0);
+        }, 0);
+    }, []);
+
     const cardData = [
         {
             id: 1,
             title: "I transformed the onboarding experience for COMSCI@UP.BAG, increasing engagement and application confirmation rates through a user-centered redesign.",
             imageAlt: "COMSCI onboarding transformation",
-            imageSrc: "/assets/images/placeholder.png" // Replace with your actual image paths
+            imageSrc: internalsPhoto
         },
         {
             id: 2,
-            title: "I further introduced standardized operational processes across COMSCI@UP.BAG, including in event coordination.",
-            imageAlt: "Operational processes standardization",
-            imageSrc: "/assets/images/placeholder.png" // Replace with your actual image paths
+            title: "I transformed the onboarding experience for COMSCI@UP.BAG, increasing engagement and application confirmation rates through a user-centered redesign.",
+            imageAlt: "COMSCI onboarding transformation",
+            imageSrc: internalsPhoto
         },
         {
             id: 3,
+            title: "I further introduced standardized operational processes across COMSCI@UP.BAG, including in event coordination.",
+            imageAlt: "Operational processes standardization",
+            imageSrc: eventPhoto
+        },
+        {
+            id: 4,
             title: "Along the way, I built connections and learned the power of empathy in every design I create.",
             imageAlt: "Empathy in design",
-            imageSrc: "/assets/images/placeholder.png" // Replace with your actual image paths
+            imageSrc: hariCraft
+        },
+        {
+            id: 5,
+            title: "Up to my senior year, taking the lead to organize a successful alumni homecoming event that reconnected our growing community.",
+            imageAlt: "Bridging communities",
+            imageSrc: alumniPhoto
         }
     ];
 
@@ -151,10 +176,10 @@ function Homepage() {
                 </div>
             </section>            <div ref={containerRef} className="relative">
                 {/* Create enough scroll space for all cards to animate */}
-                <div className="h-[400vh]">
+                <div className="h-[600vh]">
                     {/* Results Overview */}
                     <section className="sticky top-0 flex flex-row overflow-hidden w-full h-screen bg-creamBG px-horizontal py-10 gap-20">
-                        <div className="flex flex-col h-screen w-[50%] sticky top-0 justify-center gap-20">
+                        <div className="flex flex-col h-full w-[50%] sticky top-0 justify-center gap-20">
                             <Badge>I don't just click, scroll, and type!</Badge>
                             <div className="flex justify-center items-center w-full">
                                 <h1 className="text-6xl font-bricolage-grotesque text-navy font-medium">
@@ -182,9 +207,14 @@ function Homepage() {
 
             {/* Photo */}
             <section className="sticky top-0 w-full h-screen bg-creamBG ">
-                <div className="sticky top-0 w-full h-[50%] bg-slate-300 ">
+                <div className="sticky top-0 w-full h-[60%] bg-slate-300 ">
+                    <img 
+                        src={photoOfMe}
+                        alt="Photo of me"
+                        className="w-full h-full object-cover"
+                    />
                 </div>
-                <div className="absolute bottom-0 w-full h-[55%] bg-navy rounded-t-2xl flex flex-row justify-between px-horizontal">
+                <div className="absolute bottom-0 w-full h-[40%] bg-navy rounded-t-2xl flex flex-row justify-between px-horizontal">
                     <div className="w-[60%] h-full flex flex-col justify-center items-center">
                         <p className="text-creamBG text-3xl font-bricolage-grotesque font-thin"><span className="font-semibold">By observing friction,</span> not just in workflows but also in <span className="font-semibold">interpersonal dynamics,</span> I designed solutions that improved both efficiency and community well-being — believing that <span className="font-semibold">good design supports people, not just processes.</span></p>
                     </div>
