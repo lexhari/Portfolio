@@ -20,6 +20,19 @@ const blockData = [
     { id: 15, variant: 'Quality', text: 'efficient' },
     { id: 16, variant: 'Skills', text: 'prototyping' },
     { id: 17, variant: 'Skills', text: 'wireframing' },
+
+    { id: 18, variant: 'Tools', text: 'Playwright' },
+    { id: 19, variant: 'Titles', text: 'Quality Analyst' },
+    { id: 20, variant: 'Values', text: 'detail-oriented' },
+    { id: 21, variant: 'Values', text: 'analytical' },
+    { id: 22, variant: 'Values', text: 'quality-driven' },
+    { id: 23, variant: 'Quality', text: 'bug-free' },
+    { id: 24, variant: 'Quality', text: 'robust' },
+    { id: 25, variant: 'Skills', text: 'Automated Testing' },
+    { id: 26, variant: 'Skills', text: 'Manual Testing' },
+    { id: 27, variant: 'Skills', text: 'Test Case Development' },
+    { id: 28, variant: 'Skills', text: 'Regression Testing' },
+    { id: 29, variant: 'Skills', text: 'Report Writing' },
 ];
 
 // Function to shuffle array using Fisher-Yates algorithm
@@ -47,7 +60,9 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
         isDragging: false,
         draggedBody: null,
         dragOffset: { x: 0, y: 0 },
-        mousePosition: { x: 0, y: 0 }
+        mousePosition: { x: 0, y: 0 },
+        previousPosition: { x: 0, y: 0 },
+        velocity: { x: 0, y: 0 }
     });
 
     // Notify parent of state changes
@@ -85,21 +100,22 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
                 const containerRect = sceneRef.current?.getBoundingClientRect();
                 if (!containerRect) return;
 
-                // Convert screen coordinates to container coordinates
                 const containerX = e.clientX - containerRect.left;
                 const containerY = e.clientY - containerRect.top;
 
-                // Apply the drag offset
+                // Calculate velocity from mouse movement
+                const velocityX = (containerX - dragState.current.previousPosition.x) * 0.02;
+                const velocityY = (containerY - dragState.current.previousPosition.y) * 0.02;
+                dragState.current.velocity = { x: velocityX, y: velocityY };
+                dragState.current.previousPosition = { x: containerX, y: containerY };
+
                 const targetX = containerX - dragState.current.dragOffset.x;
                 const targetY = containerY - dragState.current.dragOffset.y;
 
-                // Get container dimensions for boundary checking
                 const containerWidth = containerRect.width;
                 const containerHeight = containerRect.height;
                 const wallThickness = 50;
 
-                // Constrain the target position within container bounds
-                // This prevents the object from disappearing when mouse goes out of bounds
                 const constrainedX = Math.max(
                     wallThickness, 
                     Math.min(containerWidth - wallThickness, targetX)
@@ -109,11 +125,8 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
                     Math.min(containerHeight - wallThickness, targetY)
                 );
 
-                // Move the body to the constrained position
                 const body = dragState.current.draggedBody;
                 Matter.Body.setPosition(body, { x: constrainedX, y: constrainedY });
-                
-                // Reduce velocity to prevent jittery movement
                 Matter.Body.setVelocity(body, { x: 0, y: 0 });
                 Matter.Body.setAngularVelocity(body, body.angularVelocity * 0.9);
             }
@@ -121,9 +134,24 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
 
         const handleGlobalMouseUp = () => {
             if (dragState.current.isDragging) {
-                // Reset friction when dropping
-                if (dragState.current.draggedBody) {
-                    dragState.current.draggedBody.frictionAir = 0.01;
+                const body = dragState.current.draggedBody;
+                if (body) {
+                    body.frictionAir = 0.01;
+                    
+                    // Apply flick velocity
+                    Matter.Body.setVelocity(body, dragState.current.velocity);
+                    
+                    // Apply drift if in zero gravity mode
+                    if (engineRef.current.gravity.y === 0) {
+                        const driftX = (Math.random() - 0.5) * 0.005;
+                        const driftY = (Math.random() - 0.5) * 0.005;
+                        Matter.Body.setVelocity(body, { 
+                            x: dragState.current.velocity.x + driftX, 
+                            y: dragState.current.velocity.y + driftY 
+                        });
+                        
+                        Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.01);
+                    }
                 }
                 
                 dragState.current.isDragging = false;
@@ -219,10 +247,10 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
                 width,
                 height,
                 {
-                    restitution: 0,
-                    friction: 1,
+                    restitution: 0.6,      // Enable bouncing (0-1, higher = more bounce)
+                    friction: 0.5,         // Reduce friction for better sliding
                     frictionAir: 0.01,
-                    density: 0.001,
+                    density: 0.02,         // Increase density for heavier blocks
                 }
             );
             box.renderBlockWidth = width;
@@ -243,6 +271,25 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
         // Animation loop
         const update = () => {
             const blockBodies = bodyRefs.current.filter(body => body && body.isBlock);
+            
+            // Apply continuous drift in zero gravity to all blocks
+            if (engineRef.current.gravity.y === 0) {
+                blockBodies.forEach((body) => {
+                    // Skip the block being dragged
+                    if (body !== dragState.current.draggedBody) {
+                        const currentVel = body.velocity;
+                        const driftX = (Math.random() - 0.5) * 0.02;
+                        const driftY = (Math.random() - 0.5) * 0.02;
+                        
+                        // Add small drift to existing velocity
+                        Matter.Body.setVelocity(body, {
+                            x: currentVel.x + driftX,
+                            y: currentVel.y + driftY
+                        });
+                    }
+                });
+            }
+            
             setBodies([...blockBodies]);
             requestAnimationFrame(update);
         };
@@ -263,24 +310,21 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
         const containerRect = sceneRef.current?.getBoundingClientRect();
         if (!containerRect) return;
 
-        // Calculate offset from mouse to body center
         const containerX = e.clientX - containerRect.left;
         const containerY = e.clientY - containerRect.top;
         const offsetX = containerX - body.position.x;
         const offsetY = containerY - body.position.y;
 
-        // Set drag state
         dragState.current = {
             isDragging: true,
             draggedBody: body,
             dragOffset: { x: offsetX, y: offsetY },
-            mousePosition: { x: e.clientX, y: e.clientY }
+            mousePosition: { x: e.clientX, y: e.clientY },
+            previousPosition: { x: containerX, y: containerY },
+            velocity: { x: 0, y: 0 }
         };
 
-        // Update body properties for dragging
         body.frictionAir = 0.05;
-        
-        // Set cursor styles
         document.body.style.cursor = 'grabbing';
         document.body.style.userSelect = 'none';
     };
@@ -312,32 +356,70 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
         setIsAnimating(true);
         const containerWidth = sceneRef.current?.offsetWidth || window.innerWidth;
         const containerHeight = sceneRef.current?.offsetHeight || window.innerHeight;
-        const stackX = containerWidth - 350;
-        let stackY = containerHeight - 75;
+        const maxStackHeight = containerHeight - 150; // Leave padding at top and bottom
+        const wallThickness = 50;
 
-        const sortedBodies = [...bodyRefs.current].sort((a, b) => {
-            const aSize = blockSizeMap.current[a.data.id];
-            const bSize = blockSizeMap.current[b.data.id];
-            return (bSize.width * bSize.height) - (aSize.width * aSize.height);
-        });
-
-        sortedBodies.forEach((body, index) => {
+        // Hide all blocks by moving them off-screen
+        bodyRefs.current.forEach((body) => {
             if (body && body.isBlock) {
-                const size = blockSizeMap.current[body.data.id];
-
-                setTimeout(() => {
-                    Matter.Body.setPosition(body, { x: stackX, y: stackY - size.height / 2 });
-                    Matter.Body.setVelocity(body, { x: 0, y: 0 });
-                    Matter.Body.setAngularVelocity(body, 0);
-                    Matter.Body.setAngle(body, 0);
-                    stackY -= size.height + 6;
-
-                    if (index === sortedBodies.length - 1) {
-                        setTimeout(() => setIsAnimating(false), 500);
-                    }
-                }, index * 100);
+                Matter.Body.setPosition(body, { x: -1000, y: -1000 });
             }
         });
+
+        // Wait 500ms before starting the stack animation
+        setTimeout(() => {
+            const sortedBodies = [...bodyRefs.current].sort((a, b) => {
+                const aSize = blockSizeMap.current[a.data.id];
+                const bSize = blockSizeMap.current[b.data.id];
+                return (bSize.width * bSize.height) - (aSize.width * aSize.height);
+            });
+
+            let stacks = [];
+            let currentStack = [];
+            let currentStackHeight = 0;
+
+            sortedBodies.forEach((body) => {
+                const size = blockSizeMap.current[body.data.id];
+                const blockHeight = size.height + 6; // 6 is the gap between blocks
+
+                if (currentStackHeight + blockHeight > maxStackHeight && currentStack.length > 0) {
+                    // Start a new stack
+                    stacks.push(currentStack);
+                    currentStack = [body];
+                    currentStackHeight = blockHeight;
+                } else {
+                    currentStack.push(body);
+                    currentStackHeight += blockHeight;
+                }
+            });
+
+            if (currentStack.length > 0) {
+                stacks.push(currentStack);
+            }
+
+            let totalDelay = 0;
+
+            stacks.forEach((stack, stackIndex) => {
+                const stackX = containerWidth - 150 - (stackIndex * 180); // Right side with offset for each stack
+                let stackY = containerHeight - 75;
+
+                stack.forEach((body, blockIndex) => {
+                    const size = blockSizeMap.current[body.data.id];
+
+                    setTimeout(() => {
+                        Matter.Body.setPosition(body, { x: stackX, y: stackY - size.height / 2 });
+                        Matter.Body.setVelocity(body, { x: 0, y: 0 });
+                        Matter.Body.setAngularVelocity(body, 0);
+                        Matter.Body.setAngle(body, 0);
+                        stackY -= size.height + 6;
+                    }, totalDelay);
+
+                    totalDelay += 50; // Stagger the animations
+                });
+            });
+
+            setTimeout(() => setIsAnimating(false), totalDelay + 500);
+        }, 200); // 500ms disappear time
     };
 
     const explodeBlocks = () => {
@@ -430,6 +512,19 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
             engine.gravity.y = -1;
         } else if (currentGravity < 0) {
             engine.gravity.y = 0;
+            
+            // Apply floating motion in zero gravity
+            bodyRefs.current.forEach((body) => {
+                if (body && body.isBlock) {
+                    // Random drift velocity
+                    const driftX = (Math.random() - 0.5) * 0.01;
+                    const driftY = (Math.random() - 0.5) * 0.01;
+                    Matter.Body.setVelocity(body, { x: driftX, y: driftY });
+                    
+                    // Random rotation
+                    Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.01);
+                }
+            });
         } else {
             engine.gravity.y = 1;
         }
