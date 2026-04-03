@@ -105,7 +105,7 @@ function Homepage() {
                 {/* Content layer */}
                 <div className="relative z-10 flex flex-col gap-10 justify-between w-[60%]">
                     <h1 className="text-5xl font-bricolage-grotesque text-navy font-light select-none">
-                        <span className="text-pink font-semibold">Alexis</span> is an <span className="text-yellow font-semibold">aspiring UI / UX Designer</span> who aims to create <span className="font-normal">intuitive digital experiences from user pain points</span>.
+                        <span className="text-pink font-semibold">Alexis</span> is a <span className="text-yellow font-semibold">Software Quality & UX Enthusiast</span> who focuses on creating <span className="font-normal">intuitive, user-centered digital experiences from the ground up</span>.
                     </h1>
 
                     {/* Physics Controls */}
