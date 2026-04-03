@@ -4,8 +4,9 @@ import BuildingBlocksPhysicsWrapper from "../components/buildingBlocks-physicsWr
 import Badge from '../components/badge';
 import Button from '../components/custom-button';
 import ScrollSequenceCard from '../components/scroll-sequenceCard';
-import { motion, useScroll } from 'framer-motion';
+import { motion, useScroll, useInView } from 'framer-motion';
 import { useEffect } from 'react';
+import { useRef as useRefHook } from 'react';
 import internalsPhoto from '../assets/images/internals-photo.jpg';
 import eventPhoto from '../assets/images/event-photo.jpg';
 import hariCraft from '../assets/images/hari-craft.jpg';
@@ -18,6 +19,11 @@ function Homepage() {
     const [gravityState, setGravityState] = useState('normal'); // 'normal', 'reverse', 'zero'
 
     const containerRef = useRef(null);
+    const badgeRef = useRefHook(null);
+    const badgeInView = useInView(badgeRef, { 
+        once: false,           // Triggers only once
+        margin: '-100px'      // Triggers when 100px into view
+    }); // Trigger when badge is 100px into view
 
     useEffect(() => {
         // Scroll to top on page load
@@ -180,7 +186,11 @@ function Homepage() {
                     {/* Results Overview */}
                     <section className="sticky top-0 flex flex-row overflow-hidden w-full h-screen bg-creamBG px-horizontal py-10 gap-20">
                         <div className="flex flex-col h-full w-[50%] sticky top-0 justify-center gap-20">
-                            <Badge>I don't just click, scroll, and type!</Badge>
+                            
+                            <Badge badgeRef={badgeRef} badgeInView={badgeInView}>
+                                I don't just click, scroll, and type!
+                            </Badge>
+
                             <div className="flex justify-center items-center w-full">
                                 <h1 className="text-6xl font-bricolage-grotesque text-navy font-medium">
                                     My experience in the community has greatly enhanced my awareness in user needs.
