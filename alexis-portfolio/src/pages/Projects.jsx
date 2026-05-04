@@ -6,29 +6,36 @@ const projectData = [
         title: "Hotel Property Management System in React JS",
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         imageAlt: "Project1",
-        imageSrc: "/src/assets/images/placeholder.jpg", // Replace with your actual image paths
+        imageSrc: "/src/assets/images/placeholder.jpg",
         containerRef: "#"
     },
     {
         title: "University Activity & Venue Request System Svelte Prototype",
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         imageAlt: "Project2",
-        imageSrc: "/src/assets/images/placeholder.jpg" // Replace with your actual image paths
-        // containerRef: "#project2" // Uncomment if you have a specific section for this project
+        imageSrc: "/src/assets/images/placeholder.jpg" 
+        // containerRef: "#project2" 
     },
     {
         title: "Personal Project",
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         imageAlt: "Project3",
-        imageSrc: "/src/assets/images/placeholder.jpg" // Replace with your actual image paths
-        // containerRef: "#project3" // Uncomment if you have a specific section for this project
+        imageSrc: "/src/assets/images/placeholder.jpg" 
+        // containerRef: "#project3" 
     },
     {
         title: "Mobile App",
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         imageAlt: "Project4",
-        imageSrc: "/src/assets/images/placeholder.jpg" // Replace with your actual image paths
-        // containerRef: "#project4" // Uncomment if you have a specific section for this project
+        imageSrc: "/src/assets/images/placeholder.jpg" 
+        // containerRef: "#project4" 
+    },
+    {
+        title: "Organization Website",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        imageAlt: "Project5",
+        imageSrc: "/src/assets/images/placeholder.jpg" 
+        // containerRef: "#project5" 
     },
 ];
 

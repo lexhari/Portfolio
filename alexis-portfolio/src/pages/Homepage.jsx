@@ -1,10 +1,12 @@
 import React, { useRef, useState } from 'react';
-import { Circle, CircleDot, Moon, Group, Wand, Layers, RotateCcw, MoveRight } from 'lucide-react';
+import { Circle, CircleDot, Moon, Group, Wand, Layers, RotateCcw, MoveRight, Info } from 'lucide-react';
+
+import { Tooltip } from 'react-tooltip';
 import BuildingBlocksPhysicsWrapper from "../components/buildingBlocks-physicsWrapper";
 import Badge from '../components/badge';
 import Button from '../components/custom-button';
 import ScrollSequenceCard from '../components/scroll-sequenceCard';
-import { motion, useScroll, useInView } from 'framer-motion';
+import { motion, useScroll, useInView, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 import { useRef as useRefHook } from 'react';
 import internalsPhoto from '../assets/images/internals-photo.jpg';
@@ -17,6 +19,7 @@ function Homepage() {
     const physicsRef = useRef(null);
     const [physicsState, setPhysicsState] = useState({ isReady: false, isAnimating: false });
     const [gravityState, setGravityState] = useState('normal'); // 'normal', 'reverse', 'zero'
+    const [showDragTooltip, setShowDragTooltip] = useState(true);
 
     const containerRef = useRef(null);
     const badgeRef = useRefHook(null);
@@ -69,6 +72,10 @@ function Homepage() {
         setPhysicsState(state);
     };
 
+    const handleBlockDragStart = () => {
+        setShowDragTooltip(false);
+    };
+
     const handleControlClick = (action) => {
         if (physicsRef.current) {
             switch (action) {
@@ -115,11 +122,11 @@ function Homepage() {
     const { isReady, isAnimating } = physicsState;
 
     const controlButtons = [
-        { action: 'reset', label: 'Reset', icon: <RotateCcw /> },
-        { action: 'stack', label: 'Stack', icon: <Layers /> },
-        { action: 'explode', label: 'Explode', icon: <Wand /> },
-        { action: 'organize', label: 'Organize', icon: <Group /> },
-        { action: 'gravity', label: 'Gravity', icon: getGravityIcon() }
+        { action: 'reset', label: 'Reset', icon: <RotateCcw />, description: 'Reset all blocks to their original positions' },
+        { action: 'stack', label: 'Stack', icon: <Layers />, description: 'Stack blocks neatly on top of each other' },
+        { action: 'explode', label: 'Explode', icon: <Wand />, description: 'Scatter blocks in all directions' },
+        { action: 'organize', label: 'Organize', icon: <Group />, description: 'Organize blocks by their type' },
+        { action: 'gravity', label: 'Gravity', icon: getGravityIcon(), description: 'Toggle between normal, reverse, and zero gravity' }
     ];
 
     const { scrollYProgress } = useScroll();
@@ -136,7 +143,7 @@ function Homepage() {
                 {/* Content layer */}
                 <div className="relative z-10 flex flex-col gap-10 justify-between w-[60%]">
                     <h1 className="text-5xl font-bricolage-grotesque text-navy font-light select-none">
-                        <span className="text-pink font-semibold">Alexis</span> is a <span className="text-yellow font-semibold">Software Quality & UX Enthusiast</span> who focuses on creating <span className="font-normal">intuitive, user-centered digital experiences from the ground up</span>.
+                        <span className="text-pink font-semibold">Alexis</span> is a <span className="text-yellow font-semibold">Software Quality & UX Enthusiast</span> who prioritizes <span className="font-normal">intuitive, user-centered digital experiences</span>.
                     </h1>
 
                     {/* Physics Controls */}
@@ -164,7 +171,23 @@ function Homepage() {
                 </div>
 
                 {/* Background physics layer */}
-                <BuildingBlocksPhysicsWrapper ref={physicsRef} onStateChange={handleStateChange} />
+                <BuildingBlocksPhysicsWrapper ref={physicsRef} onStateChange={handleStateChange} onDragStart={handleBlockDragStart} />
+
+                {/* Drag Tooltip */}
+                <AnimatePresence>
+                    {showDragTooltip && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 0 }}
+                            transition={{ exit: { duration: 1 } }}
+                            className="absolute right-12 top-20 bg-gray-900/70 flex items-center gap-2 text-creamBG px-4 py-2 rounded-lg text-xs font-dm-sans pointer-events-none z-50"
+                            data-tooltip-id="drag-tooltip"
+                        >
+                            <Info /> Drag and drop the blocks!
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </section>
 
             {/* Projects */}

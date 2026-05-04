@@ -28,11 +28,11 @@ const blockData = [
     { id: 22, variant: 'Values', text: 'quality-driven' },
     { id: 23, variant: 'Quality', text: 'bug-free' },
     { id: 24, variant: 'Quality', text: 'robust' },
-    { id: 25, variant: 'Skills', text: 'Automated Testing' },
-    { id: 26, variant: 'Skills', text: 'Manual Testing' },
-    { id: 27, variant: 'Skills', text: 'Test Case Development' },
-    { id: 28, variant: 'Skills', text: 'Regression Testing' },
-    { id: 29, variant: 'Skills', text: 'Report Writing' },
+    { id: 25, variant: 'Skills', text: 'automated testing' },
+    { id: 26, variant: 'Skills', text: 'manual testing' },
+    { id: 27, variant: 'Skills', text: 'test case development' },
+    { id: 28, variant: 'Skills', text: 'regression testing' },
+    { id: 29, variant: 'Skills', text: 'report writing' },
 ];
 
 // Function to shuffle array using Fisher-Yates algorithm
@@ -45,7 +45,7 @@ function shuffleArray(array) {
     return shuffled;
 }
 
-const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
+const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange, onDragStart }, ref) => {
     const sceneRef = useRef(null);
     const engineRef = useRef(Matter.Engine.create());
     const [bodies, setBodies] = useState([]);
@@ -54,6 +54,7 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
     const [sizesReady, setSizesReady] = useState(false);
     const [shuffledBlocks] = useState(() => shuffleArray(blockData));
     const [isAnimating, setIsAnimating] = useState(false);
+    const dragStartedRef = useRef(false);
 
     // Custom dragging state
     const dragState = useRef({
@@ -323,6 +324,12 @@ const BuildingBlocksPhysicsWrapper = forwardRef(({ onStateChange }, ref) => {
             previousPosition: { x: containerX, y: containerY },
             velocity: { x: 0, y: 0 }
         };
+
+        // Call drag start callback once per session
+        if (!dragStartedRef.current && onDragStart) {
+            dragStartedRef.current = true;
+            onDragStart();
+        }
 
         body.frictionAir = 0.05;
         document.body.style.cursor = 'grabbing';
