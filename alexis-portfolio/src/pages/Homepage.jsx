@@ -241,15 +241,17 @@ function Homepage() {
             </div>
 
             {/* Photo */}
-            <section className="relative w-full h-screen bg-creamBG overflow-hidden">
-                <div className="w-full h-[60%] bg-slate-300">
-                    <img
-                        src={photoOfMe}
-                        alt="Photo of me"
-                        className="w-full h-full object-cover"
-                    />
-                </div>
-                <div className="absolute bottom-0 w-full h-[40%] bg-navy rounded-t-2xl flex flex-row justify-between px-horizontal">
+            <section className="sticky top-0 w-full h-screen bg-slate-300 overflow-hidden">
+                <img
+                    src={photoOfMe}
+                    alt="Photo of me"
+                    className="w-full h-full object-cover"
+                />
+            </section>
+
+            {/* CTA Section */}
+            <section className="w-full h-fit bg-navy">
+                <div className="relative flex flex-row gap-20 rounded-t-2xl px-horizontal py-20 bg-navy flex flex-row justify-between items-center">
                     <div className="w-[60%] h-full flex flex-col justify-center items-center">
                         <p className="text-creamBG text-3xl font-bricolage-grotesque font-thin"><span className="font-semibold">By observing friction,</span> not just in workflows but also in <span className="font-semibold">interpersonal dynamics,</span> I designed solutions that improved both efficiency and community well-being — believing that <span className="font-semibold">good design supports people, not just processes.</span></p>
                     </div>

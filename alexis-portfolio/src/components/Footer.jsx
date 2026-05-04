@@ -10,7 +10,7 @@ function Footer() {
                     <Button href="/" variant="link2" className="no-underline">Home</Button>
                     <Button href="/about" variant="link2" className="no-underline">About me</Button>
                     <Button href="/projects" variant="link2" className="no-underline">Projects</Button>
-                    <Button href="/resume.pdf" download={true} variant="link2" className=" no-underline">Resume</Button>
+                    <Button href="/CARDENAS_Resume.pdf" download={true} variant="link2" className=" no-underline">Resume</Button>
                 </div>
                 <p className="text-xs font-norwige">© 2025 ALEXIS HARRIET CARDENAS. All rights reserved.</p>
             </div>
