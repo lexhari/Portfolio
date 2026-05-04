@@ -9,7 +9,7 @@ export default function ImageModal({ imageSrc, imageAlt, isOpen, onClose }) {
             onClick={onClose}
         >
             <div 
-                className="relative max-w-4xl max-h-screen"
+                className="relative max-w-6xl max-h-screen"
                 onClick={(e) => e.stopPropagation()}
             >
                 <img 
