@@ -19,7 +19,8 @@ export default {
         offBlack: "#1f1f1f"
       },
       spacing: {
-        'horizontal': '6.25rem'
+        'horizontal': '6.25rem',
+        '15': '3.75rem'
       }
     },
   },

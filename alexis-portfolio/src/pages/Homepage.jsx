@@ -21,7 +21,7 @@ function Homepage() {
 
     const containerRef = useRef(null);
     const badgeRef = useRefHook(null);
-    const badgeInView = useInView(badgeRef, { 
+    const badgeInView = useInView(badgeRef, {
         once: false,           // Triggers only once
         margin: '-100px'      // Triggers when 100px into view
     }); // Trigger when badge is 100px into view
@@ -189,25 +189,30 @@ function Homepage() {
             </section>
 
             {/* Projects */}
-            <section className="w-full h-screen bg-creamBG px-horizontal py-20">
+            <section className="flex flex-col gap-2 w-full h-screen bg-creamBG px-horizontal py-15">
                 <div className="flex flex-row gap-5 w-full h-full">
-                    <div className="w-1/3 bg-slate-300 rounded-2xl hover:w-[100%] transition-all duration-300">
-                        <p>a</p>
+                    <div className="overflow-hidden w-1/3 bg-slate-300 rounded-2xl hover:w-[100%] transition-all duration-300">
+                        <img src="src/assets/images/pms.png" alt="Project 1" className='h-full object-cover object-left' />
                     </div>
-                    <div className="w-1/3 bg-slate-300 rounded-2xl hover:w-[100%] transition-all duration-300">
-                        <p>a</p>
+                    <div className="overflow-hidden w-1/3 bg-slate-300 rounded-2xl hover:w-[100%] transition-all duration-300">
+                        <img src="src/assets/images/orgwebsite.png" alt="Project 2" className='h-full object-cover object-left' />
                     </div>
-                    <div className="w-1/3 bg-slate-300 rounded-2xl hover:w-[100%] transition-all duration-300">
-                        <p>a</p>
+                    <div className="overflow-hidden w-1/3 bg-slate-300 rounded-2xl hover:w-[100%] transition-all duration-300">
+                        <img src="src/assets/images/businesswebsite.png" alt="Project 3" className='h-full object-cover object-left' />
                     </div>
                 </div>
-            </section>            <div ref={containerRef} className="relative">
+                <div className='w-full flex justify-end'>
+                    <Button href="/projects" variant="link" className="text-offBlack uppercase font-bold flex gap-3">See more of my projects <MoveRight /></Button>
+                </div>
+            </section>
+            
+            <div ref={containerRef} className="relative">
                 {/* Create enough scroll space for all cards to animate */}
                 <div className="h-[600vh]">
                     {/* Results Overview */}
                     <section className="sticky top-0 flex flex-row overflow-hidden w-full h-screen bg-creamBG px-horizontal py-10 gap-20">
                         <div className="flex flex-col h-full w-[50%] sticky top-0 justify-center gap-20">
-                            
+
                             <Badge badgeRef={badgeRef} badgeInView={badgeInView}>
                                 I don't just click, scroll, and type!
                             </Badge>
@@ -239,7 +244,7 @@ function Homepage() {
             {/* Photo */}
             <section className="sticky top-0 w-full h-screen bg-creamBG ">
                 <div className="sticky top-0 w-full h-[60%] bg-slate-300 ">
-                    <img 
+                    <img
                         src={photoOfMe}
                         alt="Photo of me"
                         className="w-full h-full object-cover"
