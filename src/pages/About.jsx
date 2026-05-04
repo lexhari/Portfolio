@@ -1,5 +1,5 @@
 import Badge from "../components/badge";
-import gradPic from '../assets/images/grad-pic.jpg';
+import selfPic from '../assets/images/selfpic.jpg';
 import recentEvent from '../assets/images/recent-event.jpg';
 import collage from '../assets/images/collage.jpg';
 
@@ -9,7 +9,7 @@ function About() {
             <section className="flex flex-row w-full h-screen bg-creamBG px-horizontal py-[100px] gap-12">
                 <div className="w-1/3 h-full flex flex-col justify-center items-center">
                     <div className="flex overflow-hidden w-full h-full rounded-xl hover:scale-110 hover:rotate-[-3deg] transition-all duration-300">
-                        <img src={gradPic} alt="about-1" className="w-full object-cover object-top" />
+                        <img src={selfPic} alt="about-1" className="w-full h-full object-cover" />
                     </div>
                 </div>
                 <div className="w-2/3 h-full flex flex-col justify-center gap-20">
@@ -164,7 +164,7 @@ function About() {
                             <p>I enjoy playing video games, weight training, and hitting the golf driving range to unwind. I've also dabbled in producing music and playing instruments, though that passion is currently on pause (thanks to a student budget!).</p>
                         </div>
                         <div className="flex flex-col gap-10">
-                            <p>Despite being in male-dominated interesets, I’d still describe myself as a girly pop at heart. I love expressing myself through fashion and makeup. It’s this balance of soft and strong that really shapes who I am, both personally and creatively.</p>
+                            <p>Despite being in male-dominated interests, I’d still describe myself as a girly pop at heart. I love expressing myself through fashion and makeup. It’s this balance of soft and strong that really shapes who I am, both personally and creatively.</p>
                             <p>I take every chance I get to travel with my family, but I also aspire to explore the world on my own one day. I’m especially passionate about learning different histories and cultures — I’m a bit of a nerd, and I find so much inspiration in how people live, create, and connect across the globe.</p>
                         </div>
                     </div>
