@@ -32,7 +32,7 @@ function Navbar() {
                     <Button href="/projects" variant="link" className="text-navy no-underline font-semibold">Projects</Button>
                     <Button href="/about" variant="link" className="text-navy no-underline font-semibold">About</Button>
                 </div>
-                <Button href="/resume.pdf" download={true} variant="primary" className="text-navy">Resume</Button>
+                <Button href="/CARDENAS_Resume.pdf" download={true} variant="primary" className="text-navy">Resume</Button>
             </div>
         </nav>
     );
