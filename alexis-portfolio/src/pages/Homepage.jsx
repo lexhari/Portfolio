@@ -1,7 +1,5 @@
 import React, { useRef, useState } from 'react';
 import { Circle, CircleDot, Moon, Group, Wand, Layers, RotateCcw, MoveRight, Info } from 'lucide-react';
-
-import { Tooltip } from 'react-tooltip';
 import BuildingBlocksPhysicsWrapper from "../components/buildingBlocks-physicsWrapper";
 import Badge from '../components/badge';
 import Button from '../components/custom-button';

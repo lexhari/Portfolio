@@ -123,7 +123,7 @@ function About() {
             </section>
 
             <section className="sticky top-0 w-full h-screen bg-slate-300">
-                <img src="src/assets/images/placeholder.jpg" alt="about-1" className="w-full h-full object-cover" />
+                <img src="src/assets/images/orgbooth.JPG" alt="about-1" className="w-full h-full object-cover" />
             </section>
 
             <section className="w-full h-fit bg-creamBG">
@@ -148,7 +148,7 @@ function About() {
 
 
             <section className="sticky top-0 w-full h-screen bg-slate-300">
-                <img src="src/assets/images/placeholder.jpg" alt="about-1" className="w-full h-full object-cover" />
+                <img src="src/assets/images/collage.png" alt="about-1" className="w-full h-full object-cover" />
             </section>
 
             <section className="w-full h-fit bg-creamBG">
