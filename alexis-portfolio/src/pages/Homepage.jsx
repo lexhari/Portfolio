@@ -4,7 +4,7 @@ import BuildingBlocksPhysicsWrapper from "../components/buildingBlocks-physicsWr
 import Badge from '../components/badge';
 import Button from '../components/custom-button';
 import ScrollSequenceCard from '../components/scroll-sequenceCard';
-import { motion, useScroll, useInView, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 import { useRef as useRefHook } from 'react';
 import internalsPhoto from '../assets/images/internals-photo.jpg';
@@ -24,10 +24,6 @@ function Homepage() {
 
     const containerRef = useRef(null);
     const badgeRef = useRefHook(null);
-    const badgeInView = useInView(badgeRef, {
-        once: false,           // Triggers only once
-        margin: '-100px'      // Triggers when 100px into view
-    }); // Trigger when badge is 100px into view
 
     useEffect(() => {
         // Scroll to top on page load
@@ -211,12 +207,12 @@ function Homepage() {
             
             <div ref={containerRef} className="relative" style={{ contain: 'layout style paint' }}>
                 {/* Create enough scroll space for all cards to animate */}
-                <div className="h-[300vh]">
+                <div className="h-[500vh]">
                     {/* Results Overview */}
                     <section className="sticky top-0 flex flex-row overflow-hidden w-full h-screen bg-creamBG px-horizontal py-10 gap-20">
                         <div className="flex flex-col h-full w-[50%] sticky top-0 justify-center gap-20">
 
-                            <Badge badgeRef={badgeRef} badgeInView={badgeInView}>
+                            <Badge badgeRef={badgeRef}>
                                 I don't just click, scroll, and type!
                             </Badge>
 
@@ -227,7 +223,7 @@ function Homepage() {
                             </div>
                         </div>
 
-                        <div className="flex flex-col h-screen w-[50%] sticky relative" style={{ willChange: 'transform' }}>
+                        <div className="flex flex-col h-screen w-[50%] sticky relative overflow-hidden" style={{ willChange: 'transform' }}>
                             {cardData.map((card, index) => (
                                 <ScrollSequenceCard
                                     key={card.id}

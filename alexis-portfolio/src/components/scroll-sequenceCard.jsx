@@ -28,31 +28,38 @@ function ScrollSequenceCard({
     
     let fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd
     
+    const segmentStart = cardIndex * segmentSize
+    const segmentEnd = (cardIndex + 1) * segmentSize
+    
     if (cardIndex === 0) {
+        // First card: fully visible from start, fade out when next card appears
         fadeInStart = 0
         fadeInEnd = 0
-        fadeOutStart = 0.9
-        fadeOutEnd = 1.0
+        fadeOutStart = segmentSize
+        fadeOutEnd = segmentSize + 0.04
     } else if (cardIndex === totalCards - 1) {
-        fadeInStart = cardIndex * segmentSize
-        fadeInEnd = (cardIndex * segmentSize) + 0.1
+        // Last card: fade in and stay visible to the end
+        fadeInStart = segmentStart
+        fadeInEnd = segmentStart + 0.04
         fadeOutStart = 1
         fadeOutEnd = 1
     } else {
-        const segmentStart = cardIndex * segmentSize
-        const segmentEnd = (cardIndex + 1) * segmentSize
-        
+        // Middle cards: fade in, stay, fade out
         fadeInStart = segmentStart
-        fadeInEnd = segmentStart + 0.1
-        fadeOutStart = segmentEnd - 0.1
+        fadeInEnd = segmentStart + 0.04
+        fadeOutStart = segmentEnd - 0.04
         fadeOutEnd = segmentEnd
     }
     
     // Direct transforms without spring - much faster
     const opacity = useTransform(
         scrollYProgress,
-        [fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd],
-        [0, 1, 1, 0]
+        cardIndex === 0 
+            ? [0, fadeOutStart, fadeOutEnd]
+            : [fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd],
+        cardIndex === 0
+            ? [1, 1, 0]
+            : [0, 1, 1, 0]
     )
     
     const y = useTransform(
