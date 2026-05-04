@@ -1,4 +1,7 @@
 import Badge from "../components/badge";
+import gradPic from '../assets/images/grad-pic.jpg';
+import recentEvent from '../assets/images/recent-event.jpg';
+import collage from '../assets/images/collage.jpg';
 
 function About() {
     return (
@@ -6,7 +9,7 @@ function About() {
             <section className="flex flex-row w-full h-screen bg-creamBG px-horizontal py-[100px] gap-12">
                 <div className="w-1/3 h-full flex flex-col justify-center items-center">
                     <div className="flex overflow-hidden w-full h-full rounded-xl hover:scale-110 hover:rotate-[-3deg] transition-all duration-300">
-                        <img src="src/assets/images/grad-pic.jpg" alt="about-1" className="w-full object-cover object-top" />
+                        <img src={gradPic} alt="about-1" className="w-full object-cover object-top" />
                     </div>
                 </div>
                 <div className="w-2/3 h-full flex flex-col justify-center gap-20">
@@ -123,7 +126,7 @@ function About() {
             </section>
 
             <section className="sticky top-0 w-full h-screen bg-slate-300">
-                <img src="src/assets/images/recent-event.jpg" alt="about-1" className="w-full h-full object-cover" />
+                <img src={recentEvent} alt="about-1" className="w-full h-full object-cover" />
             </section>
 
             <section className="w-full h-fit bg-creamBG">
@@ -148,7 +151,7 @@ function About() {
 
 
             <section className="sticky top-0 w-full h-screen bg-slate-300">
-                <img src="src/assets/images/collage.png" alt="about-1" className="w-full h-full object-cover" />
+                <img src={collage} alt="about-1" className="w-full h-full object-cover" />
             </section>
 
             <section className="w-full h-fit bg-creamBG">

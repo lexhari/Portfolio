@@ -12,6 +12,7 @@
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "^5.2.8",
     "@fontsource-variable/dm-sans": "^5.2.6",
+    "browserslist": "^4.28.2",
     "framer-motion": "^12.15.0",
     "lucide-react": "^0.513.0",
     "matter-js": "^0.20.0",

@@ -12,6 +12,9 @@ import eventPhoto from '../assets/images/event-photo.jpg';
 import hariCraft from '../assets/images/hari-craft.jpg';
 import alumniPhoto from '../assets/images/alumni-photo.jpg';
 import photoOfMe from '../assets/images/me1.jpg';
+import pmsPhoto from '../assets/images/pms.jpg';
+import orgwebsitePhoto from '../assets/images/orgwebsite.jpg';
+import businesswebsitePhoto from '../assets/images/businesswebsite.jpg';
 
 function Homepage() {
     const physicsRef = useRef(null);
@@ -132,8 +135,8 @@ function Homepage() {
     return (
         <div>
             {/* Scroll Progress Bar */}
-            <motion.div className='fixed right-0 top-0 w-2 h-full bg-gray-500 z-50'>
-                <motion.div className='bg-pink w-full origin-top' style={{ scaleY: scrollYProgress, position: 'absolute', top: 0, left: 0, bottom: 0 }} />
+            <motion.div className='fixed right-0 top-0 w-2 h-full bg-gray-500 z-50' style={{ willChange: 'transform' }}>
+                <motion.div className='bg-pink w-full origin-top' style={{ scaleY: scrollYProgress, position: 'absolute', top: 0, left: 0, bottom: 0, transform: 'translateZ(0)' }} />
             </motion.div>
 
             {/* Hero */}
@@ -192,13 +195,13 @@ function Homepage() {
             <section className="flex flex-col gap-2 w-full h-screen bg-creamBG px-horizontal py-15">
                 <div className="flex flex-row gap-5 w-full h-full">
                     <div className="overflow-hidden w-1/3 bg-slate-300 rounded-2xl hover:w-[100%] transition-all duration-300">
-                        <img src="src/assets/images/pms.png" alt="Project 1" className='h-full object-cover object-left' />
+                        <img src={pmsPhoto} alt="Project 1" className='h-full object-cover object-left' />
                     </div>
                     <div className="overflow-hidden w-1/3 bg-slate-300 rounded-2xl hover:w-[100%] transition-all duration-300">
-                        <img src="src/assets/images/orgwebsite.png" alt="Project 2" className='h-full object-cover object-left' />
+                        <img src={orgwebsitePhoto} alt="Project 2" className='h-full object-cover object-left' />
                     </div>
                     <div className="overflow-hidden w-1/3 bg-slate-300 rounded-2xl hover:w-[100%] transition-all duration-300">
-                        <img src="src/assets/images/businesswebsite.png" alt="Project 3" className='h-full object-cover object-left' />
+                        <img src={businesswebsitePhoto} alt="Project 3" className='h-full object-cover object-left' />
                     </div>
                 </div>
                 <div className='w-full flex justify-end'>
@@ -206,9 +209,9 @@ function Homepage() {
                 </div>
             </section>
             
-            <div ref={containerRef} className="relative">
+            <div ref={containerRef} className="relative" style={{ contain: 'layout style paint' }}>
                 {/* Create enough scroll space for all cards to animate */}
-                <div className="h-[600vh]">
+                <div className="h-[300vh]">
                     {/* Results Overview */}
                     <section className="sticky top-0 flex flex-row overflow-hidden w-full h-screen bg-creamBG px-horizontal py-10 gap-20">
                         <div className="flex flex-col h-full w-[50%] sticky top-0 justify-center gap-20">
@@ -224,7 +227,7 @@ function Homepage() {
                             </div>
                         </div>
 
-                        <div className="flex flex-col h-screen w-[50%] sticky relative">
+                        <div className="flex flex-col h-screen w-[50%] sticky relative" style={{ willChange: 'transform' }}>
                             {cardData.map((card, index) => (
                                 <ScrollSequenceCard
                                     key={card.id}
@@ -242,8 +245,8 @@ function Homepage() {
             </div>
 
             {/* Photo */}
-            <section className="sticky top-0 w-full h-screen bg-creamBG ">
-                <div className="sticky top-0 w-full h-[60%] bg-slate-300 ">
+            <section className="relative w-full h-screen bg-creamBG overflow-hidden">
+                <div className="w-full h-[60%] bg-slate-300">
                     <img
                         src={photoOfMe}
                         alt="Photo of me"
