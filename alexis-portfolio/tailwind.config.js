@@ -14,7 +14,7 @@ export default {
       colors: {
         navy: "#004169",
         pink: "#FFA8C8",
-        yellow: "#FFDF5D",
+        yellow: "#f8cf2c",
         creamBG: "#FAF9F6",
         offBlack: "#1f1f1f"
       },
